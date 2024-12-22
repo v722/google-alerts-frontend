@@ -64,15 +64,40 @@ const FeedList = (props) => {
         }
     }
 
+    const isValid = () => {
+        const errorList: any = {};
+
+        if (!formData.keyword.trim()) {
+            errorList.keyword = "Keyword is required";
+        }
+
+        if (!formData.url.trim()) {
+            errorList.url = "URL is required";
+        }
+
+        if (!formData.category_name.trim()) {
+            errorList.category_name = "Category name is required";
+        }
+
+        return errorList;
+    };
+
     const addFeed = async () => {
         try {
             setLoader(true);
+            const validationErrors = isValid();
+            if (Object.keys(validationErrors).length > 0) {
+                notifyError(Object.values(validationErrors)?.join(", "));
+                setLoader(false);
+                return;
+            }
             const response = await createFeed({ category_name: formData?.category_name, keyword: formData?.keyword, url: formData?.url });
             if (response?.success) {
                 notifySuccess("Feed added successfully");
             } else {
                 notifyError(response.data?.msg);
             }
+            setFormData({ url: "", keyword: "", category_name: "" });
             setOpenForm(false)
         } catch (error) {
             console.log("error", error);
@@ -85,6 +110,7 @@ const FeedList = (props) => {
 
     const handleSelectAlert = (selectedId) => {
         setSelectedFeed(selectedId);
+        setCurrentPage(DEFAULT_PAGE_NUMBER);
     }
 
     const renderPagination = () => {
