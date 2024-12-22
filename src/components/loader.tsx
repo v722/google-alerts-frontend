@@ -1,8 +1,10 @@
 const Loader = () => {
 
     return (
-        <div className="spinner-grow" role="status">
-            <span className="sr-only"></span>
+        <div className="no-entries">
+            <div className="spinner-grow" role="status">
+                <p className="sr-only"></p>
+            </div>
         </div>
     )
 }

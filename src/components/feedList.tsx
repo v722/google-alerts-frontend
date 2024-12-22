@@ -7,6 +7,8 @@ import { getEntry } from 'services/entry';
 import { AlertTriangle } from 'lucide-react';
 import Loader from './loader';
 import { Pagination } from 'react-bootstrap';
+import { ToastContainer } from 'react-toastify';
+import { notifyError, notifySuccess } from './toaster';
 
 const DEFAULT_ITEMS_PER_PAGE = 5, DEFAULT_PAGE_NUMBER = 1;
 
@@ -64,11 +66,20 @@ const FeedList = (props) => {
 
     const addFeed = async () => {
         try {
-            await createFeed({ category_name: formData?.category_name, keyword: formData?.keyword, url: formData?.url });
+            setLoader(true);
+            const response = await createFeed({ category_name: formData?.category_name, keyword: formData?.keyword, url: formData?.url });
+            if (response?.success) {
+                notifySuccess("Feed added successfully");
+            } else {
+                notifyError(response.data?.msg);
+            }
             setOpenForm(false)
-            fetchFeed();
         } catch (error) {
-            console.log("error");
+            console.log("error", error);
+            notifyError(error?.msg);
+        } finally {
+            fetchFeed();
+            setLoader(false);
         }
     }
 
@@ -138,6 +149,7 @@ const FeedList = (props) => {
     return (
         <>
             <div className='d-flex' style={{ height: "100%" }}>
+                <ToastContainer />
                 <div className='row col-12'>
                     <div className='col-4'>
                         <Sidebar
