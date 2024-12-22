@@ -31,7 +31,6 @@ const Sidebar = (props) => {
                         onClick={() => handleSelectAlert(data?._id)}
                     >
                         <div className={`${selectedFeed === data?._id ? "bold-text" : ""}`}>{data.title?.toUpperCase()}</div>
-                        <div className="text-muted small">{data.keyword}</div>
                     </div>
                 ))}
             </div>

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import { createFeed, getFeeds } from 'services/feed';
+import { createFeed, getFeeds, refetchFeedData } from 'services/feed';
 import Sidebar from './sideBar';
-import CreateAlert from './createAlert';
+import FetchAlert from './fetchAlert';
 import EntryCard from './entry';
 import { getEntry } from 'services/entry';
 import { AlertTriangle } from 'lucide-react';
@@ -22,7 +22,7 @@ const FeedList = (props) => {
     const [selectedFeed, setSelectedFeed] = useState();
     const [feedData, setFeedData] = useState([]);
     const [entryData, setEntryData] = useState([]);
-    const [formData, setFormData] = useState<{ url: string, keyword: string, category_name: string } | null>({ url: "", keyword: "", category_name: "" });
+    const [formData, setFormData] = useState<{ url: string, category_name: string } | null>({ url: "", category_name: "" });
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
 
@@ -67,10 +67,6 @@ const FeedList = (props) => {
     const isValid = () => {
         const errorList: any = {};
 
-        if (!formData.keyword.trim()) {
-            errorList.keyword = "Keyword is required";
-        }
-
         if (!formData.url.trim()) {
             errorList.url = "URL is required";
         }
@@ -91,14 +87,14 @@ const FeedList = (props) => {
                 setLoader(false);
                 return;
             }
-            const response = await createFeed({ category_name: formData?.category_name, keyword: formData?.keyword, url: formData?.url });
+            const response = await createFeed({ category_name: formData?.category_name, url: formData?.url });
             if (response?.success) {
                 fetchCategories();
                 notifySuccess("Feed added successfully");
             } else {
                 notifyError(response.data?.msg);
             }
-            setFormData({ url: "", keyword: "", category_name: "" });
+            setFormData({ url: "", category_name: "" });
             setOpenForm(false)
         } catch (error) {
             console.log("error", error);
@@ -109,9 +105,18 @@ const FeedList = (props) => {
         }
     }
 
-    const handleSelectAlert = (selectedId) => {
-        setSelectedFeed(selectedId);
-        setCurrentPage(DEFAULT_PAGE_NUMBER);
+    const handleSelectAlert = async (selectedId) => {
+        try {
+            setLoader(true);
+            await refetchFeedData(selectedId);
+            setLoader(false);
+            setSelectedFeed(selectedId);
+            setCurrentPage(DEFAULT_PAGE_NUMBER);   
+        } catch (error) {
+            console.log("Error");
+        } finally {
+            setLoader(false);
+        }
     }
 
     const renderPagination = () => {
@@ -188,7 +193,7 @@ const FeedList = (props) => {
                             handleSelectAlert={handleSelectAlert}
                             loader={loader}
                         />
-                        <CreateAlert
+                        <FetchAlert
                             openForm={openForm}
                             setOpenForm={setOpenForm}
                             addFeed={addFeed}

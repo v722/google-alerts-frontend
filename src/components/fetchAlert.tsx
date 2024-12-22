@@ -20,7 +20,7 @@ const CUSTOM_MODAL_STYLE = {
 };
 
 
-const CreateAlert = (props) => {
+const FetchAlert = (props) => {
 
     const { openForm, setOpenForm, addFeed, setFormData, formData } = props;
 
@@ -50,27 +50,13 @@ const CreateAlert = (props) => {
         >
             <div className="bg-white rounded">
                 <div className="text-center py-3 border-bottom">
-                    <h5 className="mb-0 text-primary text-uppercase">Create Alert</h5>
+                    <h5 className="mb-0 text-primary text-uppercase">Fetch Google RSS Alert</h5>
                 </div>
                 <div className="px-4 py-3">
                     <form>
                         <div className="mb-3">
-                            <label className="form-label text-dark" htmlFor="keyword">
-                                Keyword
-                            </label>
-                            <input
-                                type="text"
-                                id="keyword"
-                                name="keyword"
-                                className="form-control"
-                                value={formData.keyword}
-                                placeholder="Enter keyword"
-                                onChange={(e) => handleChange(e)}
-                            />
-                        </div>
-                        <div className="mb-3">
                             <label className="form-label text-dark" htmlFor="url">
-                                Url
+                                Google Url
                             </label>
                             <input
                                 type="text"
@@ -111,7 +97,7 @@ const CreateAlert = (props) => {
                         type="button"
                         onClick={() => addFeed()}
                     >
-                        Save
+                        Fetch
                     </button>
                 </div>
             </div>
@@ -119,4 +105,4 @@ const CreateAlert = (props) => {
     );
 }
 
-export default CreateAlert;
+export default FetchAlert;
