@@ -176,6 +176,7 @@ const FeedList = (props) => {
                                     author={el?.author}
                                     published_at={el?.pubDate}
                                     title={el?.title}
+                                    content={el?.content}
                                     link={el?.link}
                                 />
                             }) : (
