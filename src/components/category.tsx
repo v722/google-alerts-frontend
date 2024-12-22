@@ -1,27 +1,14 @@
 import { useEffect, useState } from "react";
-import { getCategories } from "services/category";
 import { Form } from 'react-bootstrap';
 
 const Category = (props) => {
 
-    const { setSelectedCategoryId } = props;
-
-    const [categories, setCategories] = useState([]);
+    const { setSelectedCategoryId, categories, fetchCategories } = props;
     const [selectedCategory, setSelectedCategory] = useState("All");
 
     useEffect(() => {
         fetchCategories();
     }, []);
-
-    const fetchCategories = async () => {
-        try {
-            const response = await getCategories();
-            setCategories(response.data?.items);
-            return response;
-        } catch (error) {
-            console.log("error", error);
-        }
-    }
 
     const handleChange = (e) => {
         console.log("e.target.value", e.target.value);

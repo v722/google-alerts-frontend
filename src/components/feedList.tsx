@@ -14,7 +14,7 @@ const DEFAULT_ITEMS_PER_PAGE = 5, DEFAULT_PAGE_NUMBER = 1;
 
 const FeedList = (props) => {
 
-    const { selectedCategoryId } = props;
+    const { selectedCategoryId, fetchCategories } = props;
 
     const [loader, setLoader] = useState(false);
     const [openForm, setOpenForm] = useState(false);
@@ -93,6 +93,7 @@ const FeedList = (props) => {
             }
             const response = await createFeed({ category_name: formData?.category_name, keyword: formData?.keyword, url: formData?.url });
             if (response?.success) {
+                fetchCategories();
                 notifySuccess("Feed added successfully");
             } else {
                 notifyError(response.data?.msg);
